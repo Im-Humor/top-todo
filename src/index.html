@@ -5,6 +5,48 @@
         <title>Todo App</title>
     </head>
     <body>
-        <p>Test</p>
+        <div class="app-container">
+            <div class="app-menu">
+                <div class="menu-header">
+                    <h2>Menu</h2>
+                </div>
+                <div class="menu-project-header">
+                    <h3>Projects</h3>
+                </div>
+                <ul class="menu-project-list">
+                    <li class="menu-project-list-item">Project #1</li>
+                    <li class="menu-project-list-item" id="project-del">
+                        <button>Add Project</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="app-main">
+                <div class="main-project-header">
+                    <h3>Project Name</h3>
+                </div>
+                <ul class="main-todos-list">
+                    <li class="main-todos-item">
+                        <p class="main-item-name">List item 1</p>
+                        <p class="main-item-due-date">Due: 1/1/23</p>
+                        <p class="main-item-priority">Priority: High</p>
+                        <button class="main-item-del">
+                            Delete
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="app-notes">
+                <div class="notes-note-header">
+                    <h3 class="note-name">Note name</h3>
+                    <h5 class="note-duedate">Due: 1/1/23</h5>
+                    <h5 class="note-priority">Priority: High</h5>
+
+                </div>
+                <div class="notes-note-desc">
+                    <textarea name="Note-description" id="" cols="30" rows="10" class="notes-note-desc-box" placeholder="Enter text here"></textarea>
+                    <button id="update-note-desc">Save</button>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
