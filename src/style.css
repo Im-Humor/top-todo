@@ -55,6 +55,10 @@ body {
     justify-content: space-between;
 }
 
+.selected-project {
+    font-weight: bold;
+}
+
 .app-notes {
     flex: 0 1 40%;
     background-color: lightblue;

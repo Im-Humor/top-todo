@@ -1,5 +1,6 @@
 import './style.css';
-import todoItem from './item.js';
+import { refreshTodos } from './item.js';
 import {refreshProjects} from './project.js';
 
 refreshProjects();
+refreshTodos();

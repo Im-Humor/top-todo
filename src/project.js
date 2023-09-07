@@ -1,23 +1,40 @@
 import './style.css';
+import { refreshTodos } from './item';
 
-let projectList = [];
+export let projectList = [];
 const projectListHTML = document.querySelector(".menu-project-list");
 
 class project{
-    constructor(projectId, title) {
-        this.projectId = projectId;
+    constructor(title) {
         this.title = title;
+        this.projectId = Math.floor(Math.random() * 1000000);;
+        this.isSelected = 0;
         this.itemList = [];
     }
+}
+
+// logic for when project in project list is selected
+const selectProject = (event) => {
+    event.target.removeEventListener("click", selectProject)
+    let selectedProject = event.target.id
+    for (let x = 0; x < projectList.length; x++) {
+        if (projectList[x]["projectId"] == selectedProject) {
+            projectList[x]["isSelected"] = 1;
+        }
+        else {
+            projectList[x]["isSelected"] = 0;
+        }
+        refreshProjects();
+    }
+    refreshTodos();
 }
 
 // logic for when new project submit button is clicked
 const addProjectSubmission = (event) => {
     event.target.removeEventListener("click", addProjectSubmission);
-    const generatedId = Math.floor(Math.random() * 1000000);
     const newProjectField = document.querySelector("#project-title-input")
     const newProjectName = newProjectField.value
-    const newProject = new project(generatedId, newProjectName)
+    const newProject = new project(newProjectName)
     projectList.push(newProject)
     refreshProjects();
 }
@@ -35,14 +52,26 @@ const addProjectButtonClick = (event) => {
     addProjectSubmitBtn.addEventListener("click", addProjectSubmission)
 }
 
-// refresh project list from array of project objects
+// if no projects, create one and mark it selected
+// then refresh project list from array of project objects
 // and append project add button
+
 export const refreshProjects = () => {
+    if (projectList.length == 0) {
+        let dummyProject = new project("Sample Project");
+        projectList.push(dummyProject);
+        dummyProject.isSelected = 1;
+    }
     projectListHTML.innerHTML = "";
     for (let x = 0; x < projectList.length; x++) {
         const projectListHTMLObj = document.createElement("li")
         projectListHTMLObj.textContent = projectList[x]["title"]
+        if (projectList[x]["isSelected"] == 1) {
+            projectListHTMLObj.classList.add("selected-project")
+        }
+        projectListHTMLObj.setAttribute("id", projectList[x]["projectId"]);
         projectListHTML.appendChild(projectListHTMLObj)
+        projectListHTMLObj.addEventListener("click", selectProject)
     }
     const projectListAddBtn = document.createElement("button")
     projectListAddBtn.textContent = "Add Project"
