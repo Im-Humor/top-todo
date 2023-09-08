@@ -7,7 +7,7 @@ const projectListHTML = document.querySelector(".menu-project-list");
 class project{
     constructor(title) {
         this.title = title;
-        this.projectId = Math.floor(Math.random() * 1000000);;
+        this.projectId = Math.floor(Math.random() * 1000000);
         this.isSelected = 0;
         this.itemList = [];
     }

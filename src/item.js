@@ -4,6 +4,7 @@ import { projectList } from './project.js';
 const todoHeader = document.querySelector(".main-project-header")
 const todoListHTML = document.querySelector(".main-todos-list")
 const noteSection = document.querySelector(".notes-note-header")
+const noteDescSection = document.querySelector(".notes-note-desc")
 
 
 class todoItem{
@@ -17,32 +18,41 @@ class todoItem{
     }
 }
 
+const getCurrentItems = (currentProjectId, currentItemId) => {
+    const currentProject = projectList.find(item => item.projectId == currentProjectId)
+    const currentItem = currentProject.itemList.find(item => item.itemId == currentItemId)
+    return {currentProject, currentItem};
+}
 
-// TODO maybe refactor using isSelected state?
+
 const updateInputSubmit = (event) => {
     if (event.key == "Enter") {
-
-        const currentProjectId = todoHeader.id
-        const currentItemId = event.target.parentNode.id
-        const currentProject = projectList.find(item => item.projectId == currentProjectId)
-        const currentItem = currentProject.itemList.find(item => item.itemId == currentItemId)
+        const currentItem = getCurrentItems(todoHeader.id, event.target.id).currentItem;
         if (event.target.parentNode.classList.contains("note-name")) {
             currentItem.title = `${event.target.value}`
-            event.target.parentNode.innerHTML = `<h3 class="note-name">${currentItem.title}</h3>`;
+            event.target.parentNode.textContent = `${currentItem.title}`;
         }
         else if (event.target.parentNode.classList.contains("note-duedate")) {
             currentItem.dueDate = `${event.target.value}`
-            event.target.parentNode.innerHTML = `<h5 class="note-duedate">${currentItem.dueDate}</h5>`;
+            event.target.parentNode.innerHTML = `${currentItem.dueDate}`;
         }
         else if (event.target.parentNode.classList.contains("note-priority")) {
             currentItem.priority = `${event.target.value}`
-            event.target.parentNode.innerHTML = `<h5 class="note-priority">${currentItem.priority}</h5>`;
+            event.target.parentNode.innerHTML = `${currentItem.priority}`;
         }
         event.target.removeEventListener("keypress", updateInputSubmit)
         refreshTodos();
     }
 }
 
+const descSaveToObject = (event) => {
+    const currentItem = getCurrentItems(todoHeader.id,
+        document.querySelector(".main-todos-item").id).currentItem;
+    currentItem.description = `${document.querySelector("#desc-text-area").value}`
+}
+
+// logic for making title, duedate, and priority
+// clickable and editable
 const clickableUpdate = (event) => {
     event.target.removeEventListener("click", clickableUpdate)
     const updateInput = document.createElement("input")
@@ -50,14 +60,14 @@ const clickableUpdate = (event) => {
     event.target.textContent = ""
     event.target.appendChild(updateInput)
     updateInput.addEventListener("keypress", updateInputSubmit)
+    updateInput.focus();
 }
 
-const updateTodoInfo = (event) => {
+// logic for populating todo info header area
+// also populates desc section
+const updateTodoInfo = (currentProject, currentItem) => {
     noteSection.innerHTML = "";
-    const currentProjectId = todoHeader.id
-    const currentItemId = event.target.id
-    const currentProject = projectList.find(item => item.projectId == currentProjectId)
-    const currentItem = currentProject.itemList.find(item => item.itemId == currentItemId)
+    noteDescSection.innerHTML = "";
     const noteSectionHeader = document.createElement("div")
     noteSectionHeader.classList.add("notes-note-header")
     const noteSectionTitle = document.createElement("h3");
@@ -78,6 +88,23 @@ const updateTodoInfo = (event) => {
     noteSectionHeader.appendChild(noteSectionPriority)
     const childNodes = noteSection.childNodes
     childNodes.forEach(node => node.addEventListener("click", clickableUpdate))
+    const newTextArea = document.createElement("textarea")
+    newTextArea.setAttribute("id", "desc-text-area")
+    newTextArea.setAttribute("cols", "30")
+    newTextArea.setAttribute("rows", "10")
+    newTextArea.setAttribute("placeholder", `${currentItem.description}`)
+    const newSaveButton = document.createElement("button")
+    newSaveButton.textContent = "Save"
+    noteDescSection.appendChild(newTextArea)
+    noteDescSection.appendChild(newSaveButton)
+    newSaveButton.addEventListener("click", descSaveToObject)
+}
+
+// updates todo info section based on clicked todo item in todo list
+const updateTodoInfoOnClick = (event) => {
+    const currentProject = getCurrentItems(todoHeader.id, event.target.id).currentProject;
+    const currentItem = getCurrentItems(todoHeader.id, event.target.id).currentItem;
+    updateTodoInfo(currentProject, currentItem);
 }
 
 
@@ -90,6 +117,8 @@ const todoInputSubmitClick = (event) => {
     const currentProject = projectList.find(item => item.projectId == todoHeader.id)
     currentProject.itemList.push(newTodoItem);
     refreshTodos();
+    updateTodoInfo(getCurrentItems(todoHeader.id, newTodoItem.itemId).currentProject,
+    getCurrentItems(todoHeader.id, newTodoItem.itemId).currentItem);
 }
 
 
@@ -118,18 +147,13 @@ export const refreshTodos = () => {
     const currentProject = projectList.find(item => item.isSelected == 1)
     todoHeader.innerHTML = `<h3>${currentProject.title}</h3>`;
     todoHeader.setAttribute("id", `${currentProject.projectId}`)
-    if (currentProject.itemList.length == 0) {
-        let initTodoItem = new todoItem(currentProject.projectId, "New Item",
-        "", "", "")
-        currentProject.itemList.push(initTodoItem);
-    }
     for (let x = 0; x < currentProject.itemList.length; x++) {
         let todoListHTMLObj = document.createElement("li")
         todoListHTMLObj.textContent = currentProject.itemList[x]["title"];
         todoListHTMLObj.classList.add("main-todos-item");
         todoListHTML.appendChild(todoListHTMLObj);
         todoListHTMLObj.setAttribute("id", `${currentProject.itemList[x].itemId}`)
-        todoListHTMLObj.addEventListener("click", updateTodoInfo)
+        todoListHTMLObj.addEventListener("click", updateTodoInfoOnClick)
     }
     let newTodoButton = document.createElement("button")
     newTodoButton.textContent = "New Todo Item"
