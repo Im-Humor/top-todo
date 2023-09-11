@@ -66,6 +66,7 @@ const clickableUpdate = (event) => {
 // logic for populating todo info header area
 // also populates desc section
 const updateTodoInfo = (currentProject, currentItem) => {
+    localStorage.setItem("projectList", JSON.stringify(projectList));;
     noteSection.innerHTML = "";
     noteDescSection.innerHTML = "";
     if (currentItem == undefined) {

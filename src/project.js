@@ -2,6 +2,12 @@ import './style.css';
 import { refreshTodos } from './item';
 
 export let projectList = [];
+if (localStorage.getItem("projectList") === null) {
+    projectList = [];
+} else {
+    projectList = JSON.parse(localStorage.getItem("projectList"));
+}
+
 const projectListHTML = document.querySelector(".menu-project-list");
 
 class project{
@@ -36,6 +42,7 @@ const addProjectSubmission = (event) => {
     const newProjectName = newProjectField.value
     const newProject = new project(newProjectName)
     projectList.push(newProject)
+    localStorage.setItem("projectList", JSON.stringify(projectList));;
     refreshProjects();
 }
 
