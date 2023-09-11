@@ -47,7 +47,7 @@ const updateInputSubmit = (event) => {
 
 const descSaveToObject = (event) => {
     const currentItem = getCurrentItems(todoHeader.id,
-        document.querySelector(".main-todos-item").id).currentItem;
+        document.querySelector(".note-name").id).currentItem;
     currentItem.description = `${document.querySelector("#desc-text-area").value}`
 }
 
@@ -68,6 +68,9 @@ const clickableUpdate = (event) => {
 const updateTodoInfo = (currentProject, currentItem) => {
     noteSection.innerHTML = "";
     noteDescSection.innerHTML = "";
+    if (currentItem == undefined) {
+        return;
+    }
     const noteSectionHeader = document.createElement("div")
     noteSectionHeader.classList.add("notes-note-header")
     const noteSectionTitle = document.createElement("h3");
@@ -107,6 +110,15 @@ const updateTodoInfoOnClick = (event) => {
     updateTodoInfo(currentProject, currentItem);
 }
 
+const delBtnClick = (event) => {
+    event.target.removeEventListener("click", delBtnClick);
+    const currentProject = getCurrentItems(todoHeader.id, event.target.id).currentProject;
+    const currentItem = getCurrentItems(todoHeader.id, event.target.id).currentItem;
+    currentProject.itemList.splice(currentProject.itemList.findIndex(
+        (element) => element === currentItem), 1);
+    refreshTodos();
+}
+
 
 // when the submit button is pressed, takes the value
 // inside the input field and uses that to create a new todo item
@@ -138,22 +150,27 @@ const addTodoButtonClick = (event) => {
 }
 
 
-// function to refresh list of todos based on 
-// which project currently has 'isSelected' set to 1
-// also adds button to create new todo items
+// function to refresh list of todos
 export const refreshTodos = () => {
     todoHeader.innerHTML = "";
     todoListHTML.innerHTML = "";
     const currentProject = projectList.find(item => item.isSelected == 1)
     todoHeader.innerHTML = `<h3>${currentProject.title}</h3>`;
     todoHeader.setAttribute("id", `${currentProject.projectId}`)
+    // add list object, text content, and delete button per
+    // selected project
     for (let x = 0; x < currentProject.itemList.length; x++) {
-        let todoListHTMLObj = document.createElement("li")
+        const todoListHTMLObj = document.createElement("li")
         todoListHTMLObj.textContent = currentProject.itemList[x]["title"];
         todoListHTMLObj.classList.add("main-todos-item");
         todoListHTML.appendChild(todoListHTMLObj);
         todoListHTMLObj.setAttribute("id", `${currentProject.itemList[x].itemId}`)
         todoListHTMLObj.addEventListener("click", updateTodoInfoOnClick)
+        const todoListDelBtn = document.createElement("button")
+        todoListDelBtn.innerText = "Delete";
+        todoListDelBtn.setAttribute("id", `${currentProject.itemList[x].itemId}`)
+        todoListHTMLObj.appendChild(todoListDelBtn);
+        todoListDelBtn.addEventListener("click", delBtnClick)
     }
     let newTodoButton = document.createElement("button")
     newTodoButton.textContent = "New Todo Item"
