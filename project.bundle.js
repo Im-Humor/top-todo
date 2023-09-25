@@ -7,7 +7,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-(self["webpackChunktop_todo"] = self["webpackChunktop_todo"] || []).push([["index"],{
+(self["webpackChunktop_todo"] = self["webpackChunktop_todo"] || []).push([["project"],{
 
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/style.css":
 /*!*************************************************************!*\
@@ -109,16 +109,6 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 
 /***/ }),
 
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ \"./src/style.css\");\n/* harmony import */ var _item_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./item.js */ \"./src/item.js\");\n/* harmony import */ var _project_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./project.js */ \"./src/project.js\");\n\n\n\n\n(0,_project_js__WEBPACK_IMPORTED_MODULE_2__.refreshProjects)();\n(0,_item_js__WEBPACK_IMPORTED_MODULE_1__.refreshTodos)();\n\n//# sourceURL=webpack://top-todo/./src/index.js?");
-
-/***/ }),
-
 /***/ "./src/item.js":
 /*!*********************!*\
   !*** ./src/item.js ***!
@@ -142,6 +132,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 },
 /******/ __webpack_require__ => { // webpackRuntimeModules
 /******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-/******/ var __webpack_exports__ = (__webpack_exec__("./src/index.js"));
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/project.js"));
 /******/ }
 ]);
